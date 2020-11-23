@@ -87,7 +87,7 @@ def parseExtractedOutput(args):
   cmd_lines.append('for f in $(find ' + outd + args['dataset']+ '*.out | grep log | grep -v snp_cnv); do')
   cmd_lines.append('b=$(basename ${f});')
   cmd_lines.append('px=${b%.*};')
-  cmd_lines.append('cat $f | grep "vidence" | awk -v x=$px -v OFS=\',\' \'{print $0, x}\'  >> ' + outlog + ';done')
+  cmd_lines.append('cat ${px}.log | grep "vidence" | awk -v x=$px -v OFS=\',\' \'{print $0, x}\'  >> ' + outlog + ';done')
   cmd_lines.append('rm ' + outd + '*.out')
   cmd_lines.append('rm ' + outd + '*.log')
   cmd_lines.append('awk \'NR==FNR{id[$1]; next} $1 in id\' <(cut -f1 ' + out + ') ' + args['pfb'] + ' > ' + outd + args['dataset'] + '_probecoord.txt')
