@@ -14,7 +14,6 @@
 #' @export
 #'
 #'
-library(stringr)
 readInputs <- function(args){
   penn_cn_state <- decodeHMMstates()
 
