@@ -22,20 +22,23 @@ extractInheritance <- function(penntriotable){
   print(penntrio_offspring)
   print("------------------------------------------")
   # ambiguous and unambiguos state
+  
   ambstate <- penntrio_offspring %>%
-    dplyr::filter(len_tstate > 1) %>%
+    dplyr::filter(len_tstate > 1)
+  
+  ambstate <- try(ambstate %>%
     dplyr::rowwise() %>%
     dplyr::mutate(status = paste(sort(unique(sapply(strsplit(triostate, split="-")[[1]], statusFromTriostate))), collapse="-"),
-           status=ifelse(grepl("-", status), "ambiguous", status))
-  print(ambstate)
+           status=ifelse(grepl("-", status), "ambiguous", status)))
+
   unambstate <- penntrio_offspring %>%
     dplyr::filter(len_tstate == 1)
 
-  unamb_states <- unambstate %>%
+  unamb_states <- try(unambstate %>%
     dplyr::select(triostate) %>%
     dplyr::distinct() %>%
     dplyr::rowwise() %>%
-    dplyr::mutate(status = statusFromTriostate(triostate))
+    dplyr::mutate(status = statusFromTriostate(triostate)))
 
   unambstate <- unambstate %>%
     dplyr::left_join(unamb_states, by = c("triostate"))
@@ -43,6 +46,7 @@ extractInheritance <- function(penntriotable){
   penntrio_offspring_st <- do.call("rbind", list(ambstate, unambstate)) %>%
     dplyr::select(-len_tstate) %>%
     dplyr::distinct()
+  print(penntrio_offspring_st)
   ## some events are listed several times with different triostate
   ## need to collapse those
   penntrio_st <- do.call("rbind", list(penntrio_offspring_st[,colnames(penntrio_parents)],
