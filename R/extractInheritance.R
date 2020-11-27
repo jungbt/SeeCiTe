@@ -18,6 +18,7 @@ extractInheritance <- function(penntriotable){
     dplyr::mutate(len_tstate = length(unique(strsplit(triostate, split="-")[[1]])))
 
     # analyze separately
+  print(penntrio_offspring)
   # ambiguous and unambiguos state
   ambstate <- penntrio_offspring %>%
     dplyr::filter(len_tstate > 1) %>%
