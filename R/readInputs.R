@@ -14,6 +14,7 @@
 #' @export
 #'
 #'
+library(stringr)
 readInputs <- function(args){
   penn_cn_state <- decodeHMMstates()
 
@@ -90,10 +91,17 @@ readInputs <- function(args){
     suppressMessages(candidateCnvs <- candCnvFlanks %>%
       dplyr::left_join(candCnvLog, by = c("CNVID")) %>%
       dplyr::left_join(penncnv %>% dplyr::select(CNVID, status,type)) %>%
-      tidyr::separate(CNVID, c("dataset", "sample", "coordcnv"), sep = "_") %>%
+      dplyr::mutate(dataset  = str_extract(CNVID , "^(.+?)(?=_)"  ),
+                    sample   = str_extract(CNVID , "(?<=_)(.*)(?=_)"),
+                    coordcnv = str_extract(CNVID , "([^_]+$)" )) %>%
+      # tidyr::separate(CNVID, c("dataset", "sample", "coordcnv"), sep = "_") %>%
+      # tidyr::extract(CNVID,"dataset",regex="^(.+?)_") %>%
+      # tidyr::extract(CNVID,"sample",regex="_([^}]+)_") %>%
+      # tidyr::extract(CNVID,"coordcnv",regex="([^_]+$)") %>%
       #  separate(CNVID, c("dataset", "sample1", "sample2", "coordcnv"), sep = "_") %>%
       #  unite(sample, sample1, sample2, sep = "_") %>%
       dplyr::inner_join(probescollapse, by = c("Name")))
+  head(candidateCnvs)
 
 
     suppressWarnings(candidateCnvsl <- candidateCnvs %>%
