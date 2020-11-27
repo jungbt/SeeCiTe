@@ -21,8 +21,8 @@ readInputs <- function(args){
     penncnv <- readPennTrioFormat(args[["triocnv_file"]]) %>%
       dplyr::left_join(penn_cn_state, by = c("state")) %>%
       dplyr::select(-dplyr::matches("snp"), -relation)  %>%
-      tidyr::unite(cnvID, sample, coordcnv, sep="_", remove=F) %>%
-      dplyr::mutate(CNVID=paste(args[["dataset"]], cnvID, sep="_"))
+      tidyr::unite(cnvID, sample, coordcnv, sep="~", remove=F) %>%
+      dplyr::mutate(CNVID=paste(args[["dataset"]], cnvID, sep="~"))
 
     print(paste0("Reading probes file ", args[["probecoord_file"]]))
     probescoord <- read.table(args[["probecoord_file"]],
@@ -90,7 +90,7 @@ readInputs <- function(args){
     suppressMessages(candidateCnvs <- candCnvFlanks %>%
       dplyr::left_join(candCnvLog, by = c("CNVID")) %>%
       dplyr::left_join(penncnv %>% dplyr::select(CNVID, status,type)) %>%
-      tidyr::separate(CNVID, c("dataset", "sample", "coordcnv"), sep = "_") %>%
+      tidyr::separate(CNVID, c("dataset", "sample", "coordcnv"), sep = "~") %>%
       #  separate(CNVID, c("dataset", "sample1", "sample2", "coordcnv"), sep = "_") %>%
       #  unite(sample, sample1, sample2, sep = "_") %>%
       dplyr::inner_join(probescollapse, by = c("Name")))
