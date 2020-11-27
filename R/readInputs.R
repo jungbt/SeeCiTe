@@ -67,6 +67,7 @@ readInputs <- function(args){
                                             paste("BAF", c("F", "M", "O"), sep = "_"),
                                             paste("GENO", c("F", "M", "O"), sep = "_"), "Origin", "CNVID")) %>%
       dplyr::mutate(CNVID = gsub("_flanks_", "_", CNVID)) %>%
+      dplyr::mutate(CNVID = gsub(".out", "", CNVID)) %>%
       dplyr::left_join(cnvProbes, by = c("CNVID", "Name")) %>%
       dplyr::mutate(locus = ifelse(is.na(locus), "flank", locus)) %>%
       dplyr::filter(CNVID %in% penncnv$CNVID))
