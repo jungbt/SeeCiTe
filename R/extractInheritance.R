@@ -20,6 +20,9 @@ extractInheritance <- function(penntriotable){
     # analyze separately
   options(tibble.width = Inf)
   print(penntrio_offspring)
+  print(class(triostate))
+  print(paste(sort(unique(sapply(strsplit(triostate, split="-")[[1]], statusFromTriostate)))))
+  print("------------------------------------------")
   # ambiguous and unambiguos state
   ambstate <- penntrio_offspring %>%
     dplyr::filter(len_tstate > 1) %>%
